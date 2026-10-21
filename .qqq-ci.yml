@@ -5,9 +5,9 @@ java_version: '21'
 browsers: true
 api_checks: false
 docs_only: false
-release_on_main: true
-release_tag_policy: v-prefix
-test_branch_policy: feature
+release_on_main: false
+release_tag_policy: stable
+test_branch_policy: non-release
 publish:
   snapshot: true
   release_candidate: true
