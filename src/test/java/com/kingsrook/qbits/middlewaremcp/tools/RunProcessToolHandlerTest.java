@@ -65,7 +65,7 @@ class RunProcessToolHandlerTest
       qInstance.addProcess(new QProcessMetaData()
          .withName(PROCESS_NAME)
          .withLabel("Test Process")
-         .addStep(new QBackendStepMetaData()
+         .withStep(new QBackendStepMetaData()
             .withName("step1")
             .withCode(new QCodeReference(EchoBackendStep.class.getName(), QCodeType.JAVA))));
 

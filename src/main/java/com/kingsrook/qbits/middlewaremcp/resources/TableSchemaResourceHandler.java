@@ -34,6 +34,7 @@ import com.kingsrook.qqq.backend.core.model.metadata.QInstance;
 import com.kingsrook.qqq.backend.core.model.metadata.fields.QFieldMetaData;
 import com.kingsrook.qqq.backend.core.model.metadata.tables.QTableMetaData;
 import com.kingsrook.qbits.middlewaremcp.QMCPMetaData;
+import com.kingsrook.qbits.middlewaremcp.TableAccess;
 import com.kingsrook.qbits.middlewaremcp.model.MCPTableMetaData;
 import com.kingsrook.qbits.middlewaremcp.session.MCPSessionProviderInterface;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -88,7 +89,7 @@ public class TableSchemaResourceHandler
          QContext.init(qInstance, sessionProvider.createSession(exchange));
          try
          {
-            QTableMetaData table = qInstance.getTable(tableName);
+            QTableMetaData table = TableAccess.isDiscoverable(qInstance, mcpMetaData, tableName) ? qInstance.getTable(tableName) : null;
             if(table == null)
             {
                String errorJson = "{\"error\": \"Table not found: " + tableName + "\"}";

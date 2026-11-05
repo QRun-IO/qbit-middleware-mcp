@@ -31,6 +31,7 @@ import com.kingsrook.qqq.backend.core.model.metadata.QInstance;
 import com.kingsrook.qqq.backend.core.model.metadata.fields.QFieldMetaData;
 import com.kingsrook.qqq.backend.core.model.metadata.tables.QTableMetaData;
 import com.kingsrook.qbits.middlewaremcp.QMCPMetaData;
+import com.kingsrook.qbits.middlewaremcp.TableAccess;
 import com.kingsrook.qbits.middlewaremcp.model.MCPTableMetaData;
 import com.kingsrook.qbits.middlewaremcp.session.MCPSessionProviderInterface;
 
@@ -64,7 +65,11 @@ public class TableSchemaToolHandler extends AbstractQQQToolHandler
          return Map.of("error", "tableName is required");
       }
 
-      QTableMetaData table = qInstance.getTable(tableName);
+      ////////////////////////////////////////////////////////////////////////////
+      // a table that is not exposed, or that this caller cannot see, is reported //
+      // exactly like one that does not exist                                    //
+      ////////////////////////////////////////////////////////////////////////////
+      QTableMetaData table = TableAccess.isDiscoverable(qInstance, mcpMetaData, tableName) ? qInstance.getTable(tableName) : null;
       if(table == null)
       {
          return Map.of("error", "Table not found: " + tableName);

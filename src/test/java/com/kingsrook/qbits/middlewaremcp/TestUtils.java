@@ -51,7 +51,7 @@ public class TestUtils
    public static QInstance defineInstance()
    {
       QInstance qInstance = new QInstance();
-      qInstance.setAuthentication(new QAuthenticationMetaData()
+      qInstance.withInstanceDefaultAuthentication(new QAuthenticationMetaData()
          .withName("mock")
          .withType(QAuthenticationType.FULLY_ANONYMOUS));
 
