@@ -33,6 +33,7 @@ import com.kingsrook.qqq.backend.core.logging.QLogger;
 import com.kingsrook.qqq.backend.core.model.metadata.QInstance;
 import com.kingsrook.qqq.backend.core.model.metadata.tables.QTableMetaData;
 import com.kingsrook.qbits.middlewaremcp.QMCPMetaData;
+import com.kingsrook.qbits.middlewaremcp.TableAccess;
 import com.kingsrook.qbits.middlewaremcp.model.MCPTableMetaData;
 import com.kingsrook.qbits.middlewaremcp.session.MCPSessionProviderInterface;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -77,12 +78,18 @@ public class TableListResourceHandler
          try
          {
             Set<String>               exposedTableNames = mcpMetaData.getExposedTableNames();
+            Set<String>               visible           = TableAccess.visibleToSession();
             List<Map<String, Object>> tables            = new ArrayList<>();
 
             for(Map.Entry<String, QTableMetaData> entry : qInstance.getTables().entrySet())
             {
                String         tableName = entry.getKey();
                QTableMetaData table     = entry.getValue();
+
+               if(!visible.contains(tableName))
+               {
+                  continue;
+               }
 
                if(Boolean.TRUE.equals(table.getIsHidden()))
                {

@@ -66,6 +66,9 @@
    <properties>
       <revision>0.1.0-SNAPSHOT</revision>
       <mcp.sdk.version>0.12.0</mcp.sdk.version>
+      <maven.compiler.release>21</maven.compiler.release>
+      <!-- jacoco sets argLine; the empty default keeps the UTC argLine below valid when jacoco is not active -->
+      <argLine></argLine>
    </properties>
 
    <dependencyManagement>
@@ -73,7 +76,9 @@
          <dependency>
             <groupId>com.kingsrook.qqq</groupId>
             <artifactId>qqq-bom-pom</artifactId>
-            <version>0.40.0</version>
+            <!-- Published QQQ 4.1 core (Central JAR/POM): the one BOM version shared by the four app-QBit patches. Needs the QQQ 4.1 family
+                 (bearer-principal filter, table access); see the handoff for the compile evidence. -->
+            <version>4.1.0-RC.21</version>
             <type>pom</type>
             <scope>import</scope>
          </dependency>
@@ -97,7 +102,14 @@
       <dependency>
          <groupId>com.fasterxml.jackson.core</groupId>
          <artifactId>jackson-databind</artifactId>
-         <version>2.14.0</version>
+      </dependency>
+
+      <!-- Servlet filter API for the bearer authentication filter (provided by the Javalin/Jetty host) -->
+      <dependency>
+         <groupId>jakarta.servlet</groupId>
+         <artifactId>jakarta.servlet-api</artifactId>
+         <version>6.0.0</version>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -108,13 +120,48 @@
       <dependency>
          <groupId>org.assertj</groupId>
          <artifactId>assertj-core</artifactId>
-         <version>3.27.3</version>
+         <version>3.27.7</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.kingsrook.qqq</groupId>
+         <artifactId>qqq-middleware-javalin</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.kingsrook.qqq</groupId>
+         <artifactId>qqq-backend-module-rdbms</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.kingsrook.qqq</groupId>
+         <artifactId>qqq-backend-module-postgres</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.h2database</groupId>
+         <artifactId>h2</artifactId>
+         <version>2.2.220</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.testcontainers</groupId>
+         <artifactId>testcontainers</artifactId>
+         <version>2.0.3</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
 
    <build>
       <plugins>
+         <plugin>
+            <!-- PostgreSQL instants (McpHttpSecurityTest) are only correct under a UTC JVM -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <argLine>@{argLine} -Duser.timezone=UTC</argLine>
+            </configuration>
+         </plugin>
          <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
