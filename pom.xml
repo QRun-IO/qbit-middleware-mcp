@@ -29,7 +29,7 @@
 
    <groupId>com.kingsrook.qbits</groupId>
    <artifactId>qbit-middleware-mcp</artifactId>
-   <version>0.1.0-SNAPSHOT</version>
+   <version>${revision}</version>
    <packaging>jar</packaging>
 
    <name>QBit Middleware MCP</name>
